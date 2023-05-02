@@ -1,4 +1,3 @@
-
 <?php
 
 session_start();
@@ -10,8 +9,10 @@ use app\classes\Cart;
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
+$qtd = filter_input(INPUT_GET, 'qtd', FILTER_SANITIZE_NUMBER_INT);
+
 $cart = new Cart;
 
-$cart->remove($id);
+$cart->quantity($id, $qtd);
 
-header('Location: /cart.php ');
+header('Location: /cart.php');

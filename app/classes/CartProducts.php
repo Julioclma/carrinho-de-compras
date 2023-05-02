@@ -2,43 +2,47 @@
 
 namespace app\classes;
 
+use app\classes\database\models\Read;
 use app\interfaces\CartInterface;
 
 class CartProducts
 {
-    private CartInterface $cartInterface;
-
-    public function __construct(CartInterface $cartInterface)
-    {
-        $this->cartInterface = $cartInterface;
-    }
-
-    public function products(): array
+    public function products(CartInterface $cartInterface): array
     {
 
         $products = [];
+        $total = 0;
 
-        $productsInCart = $this->cartInterface->cart();
+        $productsInCart = $cartInterface->cart();
 
-        $productsInDatabase = require_once __DIR__ . '/../helpers/products.php';
-        
+        // $productsInDatabase = require_once __DIR__ . '/../helpers/products.php';
 
-        foreach ($productsInCart as $index => $quantity) {
-            
-            $product = $productsInDatabase[$index];
 
-            $products[] = [
-                'id' => $index,
-                'product' => $product['name'],
-                'price' => $product['price'],
-                'quantity' => $quantity,
-                'subtotal' => $quantity * $product['price']
-            ];
 
-            $total += $quantity * $product['price'];
-            //     if (isset($_SESSION['cart'][$index])){
-            // $productsInCart[] = $product['name']
-            //     }
+        $productsInDatabase = (new Read)->all('products');
+
+
+
+        foreach ($productsInCart as $productId => $quantity) {
+
+            $product = [... array_filter($productsInDatabase, fn ($product) => (int)$product->id === $productId)];
+
+            var_dump($product);
+            //     $product = $productsInDatabase[$index];
+            //   var_dump($productsInDatabase[$productId]) ;
+            //   exit();  
+              $products[] = [
+                    'id' => $productId,
+                    'product' => $product[0]->name,
+                    'price' => $product[0]->price,
+                    'quantity' => $quantity,
+                    'subtotal' => $quantity * $product[0]->price
+                ];
+
+                $total += $quantity * $product[0]->price;
+                //     if (isset($_SESSION['cart'][$index])){
+                // $productsInCart[] = $product['name']
+                //     }
         }
 
         return ['products' => $products, 'total' => $total];

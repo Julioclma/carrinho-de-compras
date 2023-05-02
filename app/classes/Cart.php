@@ -6,14 +6,13 @@ use app\interfaces\CartInterface;
 
 class Cart implements CartInterface
 {
-
-    public function add($product): void
+    public function add(int $product): void
     {
         if (!isset($_SESSION)) {
             $_SESSION['cart'] = [];
         }
 
-        if (!isset($_SESSION['cart'][$product])) {  
+        if (!isset($_SESSION['cart'][$product])) {
             $_SESSION['cart'][$product] = 1;
             return;
         }
@@ -23,24 +22,25 @@ class Cart implements CartInterface
         }
     }
 
-    public function remove($product): void
+    public function remove(int $product): void
     {
         if (isset($_SESSION['cart'][$product])) {
-            unset($_SESSION['cart'][$product]); 
+            unset($_SESSION['cart'][$product]);
         }
     }
 
-    public function quantity($product, $quantity): void
+    public function quantity(int $product, int $quantity): void
     {
 
-        if(isset($_SESSION['cart'][$product])){
-            if ($quantity === 0 || $quantity === '') {
+        if (isset($_SESSION['cart'][$product])) {
+            if ($quantity === 0) {
                 $this->remove($product);
                 return;
-            } 
+            }
         }
 
         $_SESSION['cart'][$product] = $quantity;
+
     }
     public function clear(): void
     {

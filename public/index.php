@@ -1,4 +1,5 @@
 <?php
+use app\classes\database\models\Read;
 
 session_start();
 
@@ -8,7 +9,9 @@ use app\classes\Cart;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$products = require_once __DIR__ . '/../app/helpers/products.php';
+                        $read = new Read();
+
+$products = $read->all('products'); 
 
 $productsInCart = count((new Cart)->cart());
 
@@ -35,10 +38,10 @@ $productsInCart = count((new Cart)->cart());
     <section id="container">
         <div>Cart: <?= $productsInCart ?> | <a href="cart.php">Go to Cart</a></div>
         <ul>
-            <?php foreach ($products as $index => $product) : ?>
+            <?php foreach ($products as $product) : ?>
                 <div id="lista">
-                    <li><?= $product['name'] ?> | <?= number_format($product['price'], 2, ',', '.') ?></li>
-                    <a href="add.php?id=<?= $index ?>">add to cart </a>
+                    <li><?= $product->name ?> | <?= number_format($product->price, 2, ',', '.') ?></li>
+                    <a href="add.php?id=<?= $product->id ?>">add to cart </a>
                 </div>
             <?php endforeach ?>
         </ul>

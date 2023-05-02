@@ -4,17 +4,14 @@ namespace app\interfaces;
 
 interface CartInterface
 {
+    public function add(int $product): void;
 
-    public function add($product): void;
+    public function remove(int $product): void;
 
-    public function remove($product): void;
-
-    public function quantity($product, $quantity): void;
+    public function quantity(int $product, int $quantity): void;
     public function clear(): void;
 
     public function cart(): array;
 
     public function dump(): void;
-
-
 }
